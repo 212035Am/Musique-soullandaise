@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Musique du club</title>
+
+<style>
+body {
+  margin:0;
+  padding:10px;
+  font-family:Arial,sans-serif;
+  background:transparent;
+  text-align:center;
+}
+
+button {
+  width:100%;
+  max-width:350px;
+  padding:16px;
+  border:0;
+  border-radius:12px;
+  background:#198754;
+  color:white;
+  font-size:20px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button.arret {
+  background:#dc3545;
+}
+
+</style>
+</head>
+
+<body>
+
+<h3>🎵 MUSIQUE DU CLUB</h3>
+<p>Pétanque Soullandaise — Sur le Terrain</p>
+
+<button id="bouton">▶ MARCHE</button>
+
+<br><br>
+
+<label>
+Volume :
+<input id="volume" type="range"
+min="0" max="1" step="0.05" value="0.25">
+<span id="valeur">25 %</span>
+</label>
+
+<audio id="audio" loop>
+  <source src="https://1drv.ms/u/c/e69ed872571da8ac/IQB2ffCGgG1fTamS4Prpwr0cAeI7abeRynrMYTOpGYCUTL8?e=RTkDEO&download=1" type="audio/mpeg">
+</audio>
+
+<script>
+const audio = document.getElementById("audio");
+const bouton = document.getElementById("bouton");
+const volume = document.getElementById("volume");
+const valeur = document.getElementById("valeur");
+
+audio.volume = 0.25;
+
+bouton.onclick = function() {
+  if (!audio.paused) {
+    audio.pause();
+    audio.currentTime = 0;
+  } else {
+    audio.play().catch(() => {
+      alert("Vérifiez le lien du MP3.");
+    });
+  }
+};
+
+audio.onplay = function() {
+  bouton.textContent = "⏹ ARRÊT";
+  bouton.classList.add("arret");
+};
+
+audio.onpause = function() {
+  bouton.textContent = "▶ MARCHE";
+  bouton.classList.remove("arret");
+};
+
+volume.oninput = function() {
+  audio.volume = Number(volume.value);
+  valeur.textContent = Math.round(audio.volume * 100) + " %";
+};
+</script>
+
+</body>
+</html>
