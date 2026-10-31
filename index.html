@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Musique Pétanque Soullandaise</title>
 
 <style>
@@ -64,6 +63,7 @@ input[type=range] {width:100%;}
   color:#555;
   margin-top:12px;
 }
+
 </style>
 </head>
 
@@ -80,16 +80,19 @@ input[type=range] {width:100%;}
 </button>
 
 <div class="volume">
+
 <label>
 Volume : <span id="valeur">25 %</span>
 </label>
 
-<input id="volume"
+<input
+id="volume"
 type="range"
 min="0"
 max="1"
 step="0.05"
 value="0.25">
+
 </div>
 
 <p id="statut">Musique à l'arrêt</p>
@@ -108,6 +111,7 @@ Appuyez sur MARCHE pour démarrer.
 </div>
 
 <script>
+
 (function() {
 
 const audio = document.getElementById("audio");
@@ -117,14 +121,15 @@ const volume = document.getElementById("volume");
 const valeur = document.getElementById("valeur");
 const statut = document.getElementById("statut");
 
-// Lien OneDrive de partage
+// Adresse OneDrive du MP3
 const lienMusique =
-"https://1drv.ms/u/c/e69ed872571da8ac/IQB2ffCGgG1fTamS4Prpwr0cAYCnQvbxjH4h2XWsxUvkURU?e=wjjBGS";
+"https://api.onedrive.com/v1.0/shares/u!aHR0cHM6Ly8xZHJ2Lm1zL3UvYy9lNjllZDg3MjU3MWRhOGFjL0lRQjJmZkNHZ0cxZlRhbVM0UHJwd3IwY0FZQ25RdmJ4ako0aDJYV3N4VXZrVVJV/root/content";
 
 audio.src = lienMusique;
 audio.volume = 0.25;
 
 function afficher() {
+
   const actif = !audio.paused;
 
   bouton.textContent = actif
@@ -141,31 +146,34 @@ function afficher() {
 bouton.addEventListener("click", async function() {
 
   if (!audio.paused) {
+
     audio.pause();
     audio.currentTime = 0;
     afficher();
-    return;
+
+  } else {
+
+    statut.textContent = "Chargement de la musique...";
+
+    try {
+      await audio.play();
+      afficher();
+
+    } catch(error) {
+
+      statut.textContent = "Erreur de lecture";
+
+      alert(
+        "Impossible de lire le MP3. Vérifiez le lien OneDrive."
+      );
+
+      afficher();
+    }
   }
-
-  statut.textContent = "Chargement de la musique...";
-
-  try {
-    await audio.play();
-    afficher();
-  } catch(error) {
-    statut.textContent =
-      "Impossible de lire le fichier MP3.";
-
-    alert(
-      "Lecture impossible. Le lien OneDrive doit être une adresse audio directe."
-    );
-
-    afficher();
-  }
-
 });
 
 volume.addEventListener("input", function() {
+
   audio.volume = Number(volume.value);
 
   valeur.textContent =
@@ -176,8 +184,7 @@ audio.addEventListener("play", afficher);
 audio.addEventListener("pause", afficher);
 
 audio.addEventListener("error", function() {
-  statut.textContent =
-    "Erreur de lecture du fichier audio.";
+  statut.textContent = "Erreur de chargement du MP3";
 });
 
 retour.addEventListener("click", function() {
@@ -188,6 +195,7 @@ retour.addEventListener("click", function() {
 afficher();
 
 })();
+
 </script>
 
 </body>
