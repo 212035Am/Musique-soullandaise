@@ -32,6 +32,7 @@ button {
   font-size: 17px;
   font-weight: bold;
   color: white;
+  cursor: pointer;
 }
 
 #marche { background: #198754; }
@@ -53,24 +54,29 @@ input[type="range"] {
 
 <div id="lecteur">
 
-  <h2>🎵 PÉTANQUE SOULLANDAISE</h2>
-  <p>Musique du club</p>
+<h2>🎵 PÉTANQUE SOULLANDAISE</h2>
+<p>Musique du club</p>
 
-  <audio id="musique"
-    src="https://raw.githubusercontent.com/212035Am/Musique-soullandaise/main/03%20-%20Sur%20le%20Terrain.mp3"
-    loop>
-  </audio>
+<audio id="musique"
+src="https://raw.githubusercontent.com/212035Am/Musique-soullandaise/main/03%20-%20Sur%20le%20Terrain.mp3"
+loop>
+</audio>
 
-  <button id="marche">▶ MARCHE</button>
-  <button id="arret">■ ARRÊT</button>
+<button id="marche">▶ MARCHE</button>
+<button id="arret">■ ARRÊT</button>
 
-  <p>Volume</p>
-  <input id="volume" type="range"
-    min="0" max="1" step="0.05" value="0.7">
+<p>Volume</p>
 
-  <p id="statut">Musique arrêtée</p>
+<input id="volume"
+type="range"
+min="0"
+max="1"
+step="0.05"
+value="0.7">
 
-  <button id="retour">↩ RETOUR KALISPORT</button>
+<p id="statut">Musique arrêtée</p>
+
+<button id="retour">↩ RETOUR KALISPORT</button>
 
 </div>
 
@@ -82,36 +88,38 @@ const volume = document.getElementById("volume");
 musique.volume = 0.7;
 
 // MARCHE
-document.getElementById("marche").addEventListener("click", function() {
+document.getElementById("marche").onclick = function() {
   musique.play()
     .then(function() {
       statut.textContent = "🎵 Musique en cours";
     })
     .catch(function() {
-      statut.textContent = "Impossible de lancer la musique";
+      statut.textContent = "Erreur de lecture";
     });
-});
+};
 
 // ARRÊT
-document.getElementById("arret").addEventListener("click", function() {
+document.getElementById("arret").onclick = function() {
   musique.pause();
   statut.textContent = "Musique arrêtée";
-});
+};
 
 // VOLUME
-volume.addEventListener("input", function() {
+volume.oninput = function() {
   musique.volume = Number(this.value);
-});
+};
 
 // RETOUR KALISPORT
-document.getElementById("retour").addEventListener("click", function() {
+document.getElementById("retour").onclick = function() {
+
   if (window.opener && !window.opener.closed) {
     window.opener.focus();
   } else {
     statut.textContent =
-      "Sélectionnez l'onglet Kalisport dans Chrome. La musique reste active.";
+      "Utilisez les onglets Chrome pour retrouver Kalisport. La musique continue.";
   }
-});
+
+};
 </script>
 
 </body>
