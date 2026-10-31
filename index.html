@@ -3,7 +3,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Musique Pétanque Soullandaise</title>
 
 <style>
@@ -32,7 +32,6 @@ button {
   font-size: 17px;
   font-weight: bold;
   color: white;
-  cursor: pointer;
 }
 
 #marche { background: #198754; }
@@ -71,7 +70,7 @@ input[type="range"] {
 
   <p id="statut">Musique arrêtée</p>
 
-  <button id="retour">↩ RETOUR KALISPORT</button>
+  <button id="retour">↩ RETOUR</button>
 
 </div>
 
@@ -80,7 +79,6 @@ const musique = document.getElementById("musique");
 const statut = document.getElementById("statut");
 const volume = document.getElementById("volume");
 
-// Volume initial
 musique.volume = 0.7;
 
 // MARCHE
@@ -105,17 +103,13 @@ volume.addEventListener("input", function() {
   musique.volume = Number(this.value);
 });
 
-// RETOUR KALISPORT
+// RETOUR À LA PAGE PRÉCÉDENTE
 document.getElementById("retour").addEventListener("click", function() {
-
-  // Revient à l'onglet Kalisport déjà ouvert
-  // sans fermer la page musicale
-  if (window.opener && !window.opener.closed) {
-    window.opener.focus();
+  if (window.history.length > 1) {
+    window.history.back();
   } else {
-    alert("Utilisez les onglets de Chrome pour revenir à Kalisport. Ne fermez pas cette page musicale.");
+    statut.textContent = "Aucune page précédente disponible";
   }
-
 });
 </script>
 
