@@ -3,196 +3,108 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Musique Pétanque Soullandaise</title>
 
 <style>
 body {
-  margin:0;
-  padding:15px;
-  background:#f2f4f6;
-  font-family:Arial,sans-serif;
-  text-align:center;
-  color:#222;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #f2f2f2;
+  padding: 25px 10px;
 }
 
-.lecteur {
-  max-width:430px;
-  margin:15px auto;
-  padding:25px 18px;
-  background:white;
-  border:2px solid #ccc;
-  border-radius:18px;
-  box-shadow:0 4px 16px #0002;
+#lecteur {
+  max-width: 420px;
+  margin: 30px auto;
+  padding: 25px;
+  background: white;
+  border: 2px solid #198754;
+  border-radius: 18px;
+  box-shadow: 0 3px 12px #aaa;
 }
-
-h2 {font-size:22px;}
 
 button {
-  width:100%;
-  padding:15px;
-  border:0;
-  border-radius:12px;
-  color:white;
-  font-size:19px;
-  font-weight:bold;
-  cursor:pointer;
-  margin-top:12px;
+  padding: 14px 22px;
+  margin: 8px;
+  border: 0;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
 }
 
-#bouton {background:#198754;}
-#bouton.arret {background:#dc3545;}
-#retour {background:#0d6efd;}
-
-.volume {
-  margin-top:22px;
-  text-align:left;
-}
-
-input[type=range] {width:100%;}
-
-.note {
-  font-size:13px;
-  color:#666;
-  line-height:1.5;
-  margin-top:18px;
-}
+#marche { background: #198754; }
+#arret { background: #dc3545; }
+#retour { background: #0d6efd; }
 
 #statut {
-  font-size:14px;
-  color:#555;
-  margin-top:12px;
+  font-weight: bold;
+  margin: 18px;
+}
+
+input[type="range"] {
+  width: 85%;
 }
 </style>
 </head>
 
 <body>
 
-<div class="lecteur">
+<div id="lecteur">
+  <h2>🎵 PÉTANQUE SOULLANDAISE</h2>
+  <p>Musique du club</p>
 
-<h2>🎵 MUSIQUE DU CLUB</h2>
+  <audio id="musique"
+    src="https://raw.githubusercontent.com/212035Am/Musique-soullandaise/main/03%20-%20Sur%20le%20Terrain.mp3"
+    loop>
+  </audio>
 
-<p>Pétanque Soullandaise — Sur le Terrain</p>
+  <button id="marche">▶ MARCHE</button>
+  <button id="arret">■ ARRÊT</button>
 
-<button id="bouton" type="button">
-▶ MARCHE
-</button>
+  <p>Volume</p>
+  <input id="volume" type="range" min="0" max="1"
+    step="0.05" value="0.7">
 
-<div class="volume">
+  <p id="statut">Musique arrêtée</p>
 
-<label>
-Volume : <span id="valeur">25 %</span>
-</label>
-
-<input
-id="volume"
-type="range"
-min="0"
-max="1"
-step="0.05"
-value="0.25">
-
-</div>
-
-<p id="statut">Musique à l'arrêt</p>
-
-<button id="retour" type="button">
-↩ RETOUR À KALISPORT
-</button>
-
-<p class="note">
-Musique en boucle.<br>
-Gardez cet onglet ouvert pour conserver la lecture.
-</p>
-
-<audio id="audio" loop preload="none"
-src="https://raw.githubusercontent.com/212035Am/Musique-soullandaise/main/03%20-%20Sur%20le%20Terrain.mp3">
-</audio>
-
+  <button id="retour">↩ RETOUR KALISPORT</button>
 </div>
 
 <script>
-(function() {
-
-const audio = document.getElementById("audio");
-const bouton = document.getElementById("bouton");
-const retour = document.getElementById("retour");
-const volume = document.getElementById("volume");
-const valeur = document.getElementById("valeur");
+const musique = document.getElementById("musique");
 const statut = document.getElementById("statut");
 
-audio.volume = 0.25;
+musique.volume = 0.7;
 
-function afficher() {
+document.getElementById("marche").addEventListener("click", function() {
+  musique.play()
+    .then(() => {
+      statut.textContent = "🎵 Musique en cours";
+    })
+    .catch(() => {
+      statut.textContent = "Impossible de lancer la musique";
+    });
+});
 
-  const actif = !audio.paused;
+document.getElementById("arret").addEventListener("click", function() {
+  musique.pause();
+  statut.textContent = "Musique arrêtée";
+});
 
-  bouton.textContent = actif
-    ? "⏹ ARRÊT"
-    : "▶ MARCHE";
+document.getElementById("volume").addEventListener("input", function() {
+  musique.volume = Number(this.value);
+});
 
-  bouton.classList.toggle("arret", actif);
-
-  statut.textContent = actif
-    ? "🎵 Musique en cours"
-    : "Musique à l'arrêt";
-}
-
-bouton.addEventListener("click", async function() {
-
-  if (!audio.paused) {
-
-    audio.pause();
-    audio.currentTime = 0;
-    afficher();
-
+document.getElementById("retour").addEventListener("click", function() {
+  if (window.opener && !window.opener.closed) {
+    window.opener.focus();
   } else {
-
-    statut.textContent = "Chargement de la musique...";
-
-    try {
-      await audio.play();
-      afficher();
-
-    } catch(error) {
-
-      statut.textContent = "Erreur de lecture";
-
-      alert("Impossible de lire le fichier MP3 GitHub.");
-
-      afficher();
-    }
+    alert("Utilisez les onglets de Chrome pour revenir à Kalisport. Ne fermez pas cet onglet si vous souhaitez garder la musique.");
   }
 });
-
-volume.addEventListener("input", function() {
-
-  audio.volume = Number(volume.value);
-
-  valeur.textContent =
-    Math.round(audio.volume * 100) + " %";
-});
-
-audio.addEventListener("play", afficher);
-audio.addEventListener("pause", afficher);
-
-audio.addEventListener("error", function() {
-  statut.textContent = "Erreur de chargement du MP3";
-});
-
-// Retour Kalisport dans un nouvel onglet
-retour.addEventListener("click", function() {
-
-  window.open(
-    "https://petanquesoullandaise.fr",
-    "_blank"
-  );
-
-});
-
-afficher();
-
-})();
 </script>
 
 </body>
