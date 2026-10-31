@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Musique Pétanque Soullandaise</title>
+<title>Pétanque Soullandaise - Musique</title>
 
 <style>
 body {
@@ -66,13 +66,8 @@ loop>
 <button id="arret">■ ARRÊT</button>
 
 <p>Volume</p>
-
-<input id="volume"
-type="range"
-min="0"
-max="1"
-step="0.05"
-value="0.7">
+<input id="volume" type="range"
+min="0" max="1" step="0.05" value="0.7">
 
 <p id="statut">Musique arrêtée</p>
 
@@ -83,19 +78,14 @@ value="0.7">
 <script>
 const musique = document.getElementById("musique");
 const statut = document.getElementById("statut");
-const volume = document.getElementById("volume");
 
 musique.volume = 0.7;
 
 // MARCHE
 document.getElementById("marche").onclick = function() {
   musique.play()
-    .then(function() {
-      statut.textContent = "🎵 Musique en cours";
-    })
-    .catch(function() {
-      statut.textContent = "Erreur de lecture";
-    });
+    .then(() => statut.textContent = "🎵 Musique en cours")
+    .catch(() => statut.textContent = "Erreur de lecture");
 };
 
 // ARRÊT
@@ -105,7 +95,7 @@ document.getElementById("arret").onclick = function() {
 };
 
 // VOLUME
-volume.oninput = function() {
+document.getElementById("volume").oninput = function() {
   musique.volume = Number(this.value);
 };
 
@@ -113,13 +103,14 @@ volume.oninput = function() {
 document.getElementById("retour").onclick = function() {
 
   if (window.opener && !window.opener.closed) {
-    window.opener.postMessage(
-      "RETOUR_KALISPORT",
-      "https://petanquesoullandaise.fr"
-    );
     window.opener.focus();
 
-    statut.textContent = "Appuyez sur l’onglet Kalisport";
+    window.opener.postMessage(
+      "AFFICHER_KALISPORT",
+      "https://petanquesoullandaise.fr"
+    );
+
+    statut.textContent = "Retour demandé à Kalisport";
   } else {
     statut.textContent =
       "Sélectionnez l'onglet Kalisport dans Chrome.";
