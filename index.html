@@ -26,7 +26,9 @@ body {
   box-shadow:0 4px 16px #0002;
 }
 
-h2 {font-size:22px;}
+h2 {
+  font-size:22px;
+}
 
 button {
   width:100%;
@@ -40,16 +42,26 @@ button {
   margin-top:12px;
 }
 
-#bouton {background:#198754;}
-#bouton.arret {background:#dc3545;}
-#retour {background:#0d6efd;}
+#bouton {
+  background:#198754;
+}
+
+#bouton.arret {
+  background:#dc3545;
+}
+
+#retour {
+  background:#0d6efd;
+}
 
 .volume {
   margin-top:22px;
   text-align:left;
 }
 
-input[type=range] {width:100%;}
+input[type=range] {
+  width:100%;
+}
 
 .note {
   font-size:13px;
@@ -63,7 +75,6 @@ input[type=range] {width:100%;}
   color:#555;
   margin-top:12px;
 }
-
 </style>
 </head>
 
@@ -102,16 +113,19 @@ value="0.25">
 </button>
 
 <p class="note">
-Lecture en boucle.
+Musique en boucle.
 Appuyez sur MARCHE pour démarrer.
 </p>
 
-<audio id="audio" loop preload="none"></audio>
+<audio id="audio" loop preload="none">
+<source
+src="https://raw.githubusercontent.com/212035Am/Musique-soullandaise/main/03%20-%20Sur%20le%20Terrain.mp3"
+type="audio/mpeg">
+</audio>
 
 </div>
 
 <script>
-
 (function() {
 
 const audio = document.getElementById("audio");
@@ -121,11 +135,6 @@ const volume = document.getElementById("volume");
 const valeur = document.getElementById("valeur");
 const statut = document.getElementById("statut");
 
-// Adresse OneDrive du MP3
-const lienMusique =
-"https://api.onedrive.com/v1.0/shares/u!aHR0cHM6Ly8xZHJ2Lm1zL3UvYy9lNjllZDg3MjU3MWRhOGFjL0lRQjJmZkNHZ0cxZlRhbVM0UHJwd3IwY0FZQ25RdmJ4ako0aDJYV3N4VXZrVVJV/root/content";
-
-audio.src = lienMusique;
 audio.volume = 0.25;
 
 function afficher() {
@@ -156,15 +165,16 @@ bouton.addEventListener("click", async function() {
     statut.textContent = "Chargement de la musique...";
 
     try {
+
       await audio.play();
       afficher();
 
     } catch(error) {
 
-      statut.textContent = "Erreur de lecture";
+      statut.textContent = "Erreur de lecture du MP3";
 
       alert(
-        "Impossible de lire le MP3. Vérifiez le lien OneDrive."
+        "Impossible de lire la musique. Vérifiez le fichier GitHub."
       );
 
       afficher();
@@ -188,14 +198,15 @@ audio.addEventListener("error", function() {
 });
 
 retour.addEventListener("click", function() {
+
   window.location.href =
     "https://petanquesoullandaise.fr";
+
 });
 
 afficher();
 
 })();
-
 </script>
 
 </body>
