@@ -4,12 +4,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Musique Pétanque Soullandaise</title>
 
 <style>
 body {
   margin:0;
-  padding:20px;
+  padding:15px;
   background:#f2f4f6;
   font-family:Arial,sans-serif;
   text-align:center;
@@ -26,9 +27,7 @@ body {
   box-shadow:0 4px 16px #0002;
 }
 
-h2 {
-  font-size:22px;
-}
+h2 {font-size:22px;}
 
 button {
   width:100%;
@@ -42,32 +41,28 @@ button {
   margin-top:12px;
 }
 
-#bouton {
-  background:#198754;
-}
-
-#bouton.arret {
-  background:#dc3545;
-}
-
-#retour {
-  background:#0d6efd;
-}
+#bouton {background:#198754;}
+#bouton.arret {background:#dc3545;}
+#retour {background:#0d6efd;}
 
 .volume {
   margin-top:22px;
   text-align:left;
 }
 
-input[type=range] {
-  width:100%;
-}
+input[type=range] {width:100%;}
 
 .note {
   font-size:13px;
   color:#666;
   line-height:1.5;
   margin-top:18px;
+}
+
+#statut {
+  font-size:14px;
+  color:#555;
+  margin-top:12px;
 }
 </style>
 </head>
@@ -85,40 +80,34 @@ input[type=range] {
 </button>
 
 <div class="volume">
-
 <label>
 Volume : <span id="valeur">25 %</span>
 </label>
 
-<input
-id="volume"
+<input id="volume"
 type="range"
 min="0"
 max="1"
 step="0.05"
 value="0.25">
-
 </div>
+
+<p id="statut">Musique à l'arrêt</p>
 
 <button id="retour" type="button">
 ↩ RETOUR À KALISPORT
 </button>
 
 <p class="note">
-La musique continue en boucle.
-Ne fermez pas cet onglet pour conserver la lecture.
+Lecture en boucle.
+Appuyez sur MARCHE pour démarrer.
 </p>
 
-<audio id="audio" loop preload="none">
-<source
-src="https://1drv.ms/u/c/e69ed872571da8ac/IQTNvSU1Ph5lSoD-4-Mr5nkeASxPlOAKDPEbXIMw-raM-EY"
-type="audio/mpeg">
-</audio>
+<audio id="audio" loop preload="none"></audio>
 
 </div>
 
 <script>
-
 (function() {
 
 const audio = document.getElementById("audio");
@@ -126,51 +115,79 @@ const bouton = document.getElementById("bouton");
 const retour = document.getElementById("retour");
 const volume = document.getElementById("volume");
 const valeur = document.getElementById("valeur");
+const statut = document.getElementById("statut");
 
+// Lien OneDrive de partage
+const lienMusique =
+"https://1drv.ms/u/c/e69ed872571da8ac/IQB2ffCGgG1fTamS4Prpwr0cAYCnQvbxjH4h2XWsxUvkURU?e=wjjBGS";
+
+audio.src = lienMusique;
 audio.volume = 0.25;
 
-function afficher(enLecture) {
-  bouton.textContent = enLecture ? "⏹ ARRÊT" : "▶ MARCHE";
-  bouton.classList.toggle("arret", enLecture);
+function afficher() {
+  const actif = !audio.paused;
+
+  bouton.textContent = actif
+    ? "⏹ ARRÊT"
+    : "▶ MARCHE";
+
+  bouton.classList.toggle("arret", actif);
+
+  statut.textContent = actif
+    ? "🎵 Musique en cours"
+    : "Musique à l'arrêt";
 }
 
-bouton.addEventListener("click", function() {
+bouton.addEventListener("click", async function() {
 
   if (!audio.paused) {
     audio.pause();
     audio.currentTime = 0;
-    afficher(false);
-  } else {
-    audio.play().then(function() {
-      afficher(true);
-    }).catch(function() {
-      alert("Lecture impossible. Vérifiez le lien OneDrive.");
-    });
+    afficher();
+    return;
+  }
+
+  statut.textContent = "Chargement de la musique...";
+
+  try {
+    await audio.play();
+    afficher();
+  } catch(error) {
+    statut.textContent =
+      "Impossible de lire le fichier MP3.";
+
+    alert(
+      "Lecture impossible. Le lien OneDrive doit être une adresse audio directe."
+    );
+
+    afficher();
   }
 
 });
 
 volume.addEventListener("input", function() {
   audio.volume = Number(volume.value);
-  valeur.textContent = Math.round(audio.volume * 100) + " %";
+
+  valeur.textContent =
+    Math.round(audio.volume * 100) + " %";
 });
 
-audio.addEventListener("play", function() {
-  afficher(true);
-});
+audio.addEventListener("play", afficher);
+audio.addEventListener("pause", afficher);
 
-audio.addEventListener("pause", function() {
-  afficher(false);
+audio.addEventListener("error", function() {
+  statut.textContent =
+    "Erreur de lecture du fichier audio.";
 });
 
 retour.addEventListener("click", function() {
-  window.location.href = "https://petanquesoullandaise.fr";
+  window.location.href =
+    "https://petanquesoullandaise.fr";
 });
 
-afficher(false);
+afficher();
 
 })();
-
 </script>
 
 </body>
