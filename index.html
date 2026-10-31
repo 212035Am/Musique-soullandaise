@@ -70,7 +70,7 @@ input[type="range"] {
 
   <p id="statut">Musique arrêtée</p>
 
-  <button id="retour">↩ RETOUR</button>
+  <button id="retour">↩ RETOUR KALISPORT</button>
 
 </div>
 
@@ -103,12 +103,13 @@ volume.addEventListener("input", function() {
   musique.volume = Number(this.value);
 });
 
-// RETOUR À LA PAGE PRÉCÉDENTE
+// RETOUR KALISPORT
 document.getElementById("retour").addEventListener("click", function() {
-  if (window.history.length > 1) {
-    window.history.back();
+  if (window.opener && !window.opener.closed) {
+    window.opener.focus();
   } else {
-    statut.textContent = "Aucune page précédente disponible";
+    statut.textContent =
+      "Sélectionnez l'onglet Kalisport dans Chrome. La musique reste active.";
   }
 });
 </script>
