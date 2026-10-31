@@ -5,7 +5,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Musique Pétanque Soullandaise</title>
-
 <style>
 body {
   margin:0;
@@ -13,9 +12,7 @@ body {
   background:#f2f4f6;
   font-family:Arial,sans-serif;
   text-align:center;
-  color:#222;
 }
-
 .lecteur {
   max-width:430px;
   margin:15px auto;
@@ -25,11 +22,6 @@ body {
   border-radius:18px;
   box-shadow:0 4px 16px #0002;
 }
-
-h2 {
-  font-size:22px;
-}
-
 button {
   width:100%;
   padding:15px;
@@ -38,176 +30,80 @@ button {
   color:white;
   font-size:19px;
   font-weight:bold;
-  cursor:pointer;
   margin-top:12px;
 }
-
-#bouton {
-  background:#198754;
-}
-
-#bouton.arret {
-  background:#dc3545;
-}
-
-#retour {
-  background:#0d6efd;
-}
-
-.volume {
-  margin-top:22px;
-  text-align:left;
-}
-
-input[type=range] {
-  width:100%;
-}
-
-.note {
-  font-size:13px;
-  color:#666;
-  line-height:1.5;
-  margin-top:18px;
-}
-
-#statut {
-  font-size:14px;
-  color:#555;
-  margin-top:12px;
-}
+#bouton {background:#198754;}
+#bouton.arret {background:#dc3545;}
+#retour {background:#0d6efd;}
+.volume {margin-top:22px;text-align:left;}
+input[type=range] {width:100%;}
+.note {font-size:13px;color:#666;margin-top:18px;}
 </style>
 </head>
-
 <body>
 
 <div class="lecteur">
-
 <h2>🎵 MUSIQUE DU CLUB</h2>
-
 <p>Pétanque Soullandaise — Sur le Terrain</p>
 
-<button id="bouton" type="button">
-▶ MARCHE
-</button>
+<button id="bouton">▶ MARCHE</button>
 
 <div class="volume">
-
-<label>
-Volume : <span id="valeur">25 %</span>
-</label>
-
-<input
-id="volume"
-type="range"
-min="0"
-max="1"
-step="0.05"
-value="0.25">
-
+<label>Volume : <span id="valeur">25 %</span></label>
+<input id="volume" type="range"
+min="0" max="1" step="0.05" value="0.25">
 </div>
 
-<p id="statut">Musique à l'arrêt</p>
+<button id="retour">↩ RETOUR À KALISPORT</button>
 
-<button id="retour" type="button">
-↩ RETOUR À KALISPORT
-</button>
+<p class="note">Lecture en boucle</p>
 
-<p class="note">
-Musique en boucle.
-Appuyez sur MARCHE pour démarrer.
-</p>
-
-<audio id="audio" loop preload="none">
-<source
-src="https://raw.githubusercontent.com/212035Am/Musique-soullandaise/main/03%20-%20Sur%20le%20Terrain.mp3"
-type="audio/mpeg">
+<audio id="audio" loop preload="none"
+src="https://raw.githubusercontent.com/212035Am/Musique-soullandaise/main/03%20-%20Sur%20le%20Terrain.mp3">
 </audio>
-
 </div>
 
 <script>
-(function() {
-
 const audio = document.getElementById("audio");
 const bouton = document.getElementById("bouton");
-const retour = document.getElementById("retour");
 const volume = document.getElementById("volume");
 const valeur = document.getElementById("valeur");
-const statut = document.getElementById("statut");
 
 audio.volume = 0.25;
 
 function afficher() {
-
   const actif = !audio.paused;
-
-  bouton.textContent = actif
-    ? "⏹ ARRÊT"
-    : "▶ MARCHE";
-
+  bouton.textContent = actif ? "⏹ ARRÊT" : "▶ MARCHE";
   bouton.classList.toggle("arret", actif);
-
-  statut.textContent = actif
-    ? "🎵 Musique en cours"
-    : "Musique à l'arrêt";
 }
 
-bouton.addEventListener("click", async function() {
-
+bouton.onclick = async function() {
   if (!audio.paused) {
-
     audio.pause();
     audio.currentTime = 0;
-    afficher();
-
   } else {
-
-    statut.textContent = "Chargement de la musique...";
-
     try {
-
       await audio.play();
-      afficher();
-
-    } catch(error) {
-
-      statut.textContent = "Erreur de lecture du MP3";
-
-      alert(
-        "Impossible de lire la musique. Vérifiez le fichier GitHub."
-      );
-
-      afficher();
+    } catch(e) {
+      alert("Lecture impossible. Vérifiez le fichier GitHub.");
     }
   }
-});
+  afficher();
+};
 
-volume.addEventListener("input", function() {
-
+volume.oninput = function() {
   audio.volume = Number(volume.value);
+  valeur.textContent = Math.round(audio.volume * 100) + " %";
+};
 
-  valeur.textContent =
-    Math.round(audio.volume * 100) + " %";
-});
+audio.onplay = afficher;
+audio.onpause = afficher;
 
-audio.addEventListener("play", afficher);
-audio.addEventListener("pause", afficher);
-
-audio.addEventListener("error", function() {
-  statut.textContent = "Erreur de chargement du MP3";
-});
-
-retour.addEventListener("click", function() {
-
-  window.location.href =
-    "https://petanquesoullandaise.fr";
-
-});
+document.getElementById("retour").onclick = function() {
+  location.href = "https://petanquesoullandaise.fr";
+};
 
 afficher();
-
-})();
 </script>
-
 </body>
 </html>
