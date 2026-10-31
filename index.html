@@ -66,8 +66,13 @@ loop>
 <button id="arret">■ ARRÊT</button>
 
 <p>Volume</p>
-<input id="volume" type="range"
-min="0" max="1" step="0.05" value="0.7">
+
+<input id="volume"
+type="range"
+min="0"
+max="1"
+step="0.05"
+value="0.7">
 
 <p id="statut">Musique arrêtée</p>
 
@@ -108,13 +113,17 @@ volume.oninput = function() {
 document.getElementById("retour").onclick = function() {
 
   if (window.opener && !window.opener.closed) {
+    window.opener.postMessage(
+      "RETOUR_KALISPORT",
+      "https://petanquesoullandaise.fr"
+    );
     window.opener.focus();
-    statut.textContent = "Retour vers Kalisport demandé";
+
+    statut.textContent = "Retour demandé à Kalisport";
   } else {
     statut.textContent =
-      "Kalisport est ouvert dans un autre onglet. Sélectionnez-le dans Chrome.";
+      "Sélectionnez l'onglet Kalisport dans Chrome.";
   }
-
 };
 </script>
 
