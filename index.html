@@ -7,83 +7,83 @@
 <title>Musique du club - Pétanque Soullandaise</title>
 
 <style>
-  body {
-    margin: 0;
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-    padding: 20px;
-    box-sizing: border-box;
-    background: #f2f4f6;
-    font-family: Arial, sans-serif;
-    color: #222;
-  }
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  background: #f2f4f6;
+  font-family: Arial, sans-serif;
+  color: #222;
+}
 
-  .lecteur {
-    width: min(100%, 430px);
-    box-sizing: border-box;
-    text-align: center;
-    background: white;
-    padding: 26px 22px;
-    border: 2px solid #ccc;
-    border-radius: 18px;
-    box-shadow: 0 4px 16px #0002;
-  }
+.lecteur {
+  width: min(100%, 430px);
+  box-sizing: border-box;
+  text-align: center;
+  background: white;
+  padding: 26px 22px;
+  border: 2px solid #ccc;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px #0002;
+}
 
-  h1 {
-    font-size: 22px;
-    margin-bottom: 15px;
-  }
+h1 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
 
-  .morceau {
-    font-size: 15px;
-    margin-bottom: 20px;
-    color: #555;
-  }
+.morceau {
+  font-size: 15px;
+  margin-bottom: 20px;
+  color: #555;
+}
 
-  select {
-    width: 100%;
-    padding: 13px;
-    margin-bottom: 18px;
-    border: 1px solid #aaa;
-    border-radius: 9px;
-    font-size: 16px;
-  }
+select {
+  width: 100%;
+  padding: 13px;
+  margin: 12px 0 18px;
+  border: 1px solid #aaa;
+  border-radius: 9px;
+  font-size: 16px;
+}
 
-  button {
-    width: 100%;
-    min-height: 62px;
-    border: 0;
-    border-radius: 13px;
-    color: white;
-    background: #198754;
-    font-size: 21px;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 14px;
-  }
+button {
+  width: 100%;
+  min-height: 62px;
+  border: 0;
+  border-radius: 13px;
+  color: white;
+  background: #198754;
+  font-size: 21px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 14px;
+}
 
-  button.arret {
-    background: #dc3545;
-  }
+button.arret {
+  background: #dc3545;
+}
 
-  .volume {
-    margin-top: 20px;
-    text-align: left;
-    font-size: 14px;
-  }
+.volume {
+  margin-top: 20px;
+  text-align: left;
+  font-size: 14px;
+}
 
-  input[type=range] {
-    width: 100%;
-    margin-top: 10px;
-  }
+input[type=range] {
+  width: 100%;
+  margin-top: 10px;
+}
 
-  .note {
-    font-size: 13px;
-    line-height: 1.5;
-    color: #555;
-    margin-top: 18px;
-  }
+.note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #555;
+  margin-top: 18px;
+}
 </style>
 </head>
 
@@ -91,63 +91,60 @@
 
 <main class="lecteur">
 
-  <h1>🎵 MUSIQUE DU CLUB</h1>
+<h1>🎵 MUSIQUE DU CLUB</h1>
 
-  <p class="morceau" id="titre">
-    Pétanque Soullandaise
-  </p>
+<p class="morceau" id="titre">
+Pétanque Soullandaise
+</p>
 
-  <label for="choix">Choisir une musique :</label>
+<label for="choix"><b>Choisir une musique :</b></label>
 
-  <select id="choix">
-    <option value="terrain">
-      Sur le Terrain
-    </option>
+<select id="choix">
+  <option value="terrain">Sur le Terrain</option>
+  <option value="popdance">Pop Dance</option>
+</select>
 
-    <option value="popdance">
-      Pop Dance
-    </option>
-  </select>
+<button id="bouton" type="button">
+▶ MARCHE
+</button>
 
-  <button id="bouton" type="button">
-    ▶ MARCHE
-  </button>
+<div class="volume">
+  <label for="volume">
+    Volume : <span id="valeur-volume">25 %</span>
+  </label>
 
-  <div class="volume">
-    <label for="volume">
-      Volume : <span id="valeur-volume">25 %</span>
-    </label>
+  <input id="volume"
+    type="range"
+    min="0"
+    max="1"
+    step="0.05"
+    value="0.25">
+</div>
 
-    <input id="volume"
-      type="range"
-      min="0"
-      max="1"
-      step="0.05"
-      value="0.25">
-  </div>
+<p class="note">
+Choisissez une musique puis appuyez sur MARCHE.
+</p>
 
-  <p class="note">
-    Choisissez votre musique puis appuyez sur MARCHE.
-  </p>
-
-  <audio id="audio" preload="none" loop></audio>
+<audio id="audio" preload="none" loop></audio>
 
 </main>
 
 <script>
 (function () {
 
-  var audio = document.getElementById('audio');
-  var bouton = document.getElementById('bouton');
-  var choix = document.getElementById('choix');
-  var volume = document.getElementById('volume');
-  var valeurVolume = document.getElementById('valeur-volume');
-  var titre = document.getElementById('titre');
+  var audio = document.getElementById("audio");
+  var bouton = document.getElementById("bouton");
+  var choix = document.getElementById("choix");
+  var volume = document.getElementById("volume");
+  var valeurVolume = document.getElementById("valeur-volume");
+  var titre = document.getElementById("titre");
+
+  // ADRESSES DES MUSIQUES SUR GITHUB
 
   var musiques = {
     terrain: {
       nom: "Sur le Terrain",
-      url: "/public/9552/upload/files/Mp3/03%20-%20Sur%20le%20Terrain.mp3"
+      url: "https://raw.githubusercontent.com/212035Am/Musique-soullandaise/main/03%20-%20Sur%20le%20Terrain.mp3"
     },
 
     popdance: {
@@ -159,23 +156,36 @@
   audio.volume = Number(volume.value);
 
   function afficher(enLecture) {
-    bouton.textContent = enLecture ? "⏹ ARRÊT" : "▶ MARCHE";
+    bouton.textContent = enLecture
+      ? "⏹ ARRÊT"
+      : "▶ MARCHE";
+
     bouton.classList.toggle("arret", enLecture);
   }
 
   function changerMusique() {
+
     var musique = musiques[choix.value];
 
     audio.pause();
     audio.currentTime = 0;
+
     audio.src = musique.url;
     audio.load();
 
-    titre.textContent = "Pétanque Soullandaise — " + musique.nom;
+    titre.textContent =
+      "Pétanque Soullandaise — " + musique.nom;
+
     afficher(false);
   }
 
-  choix.addEventListener("change", changerMusique);
+  // CHOIX DE LA MUSIQUE
+
+  choix.addEventListener("change", function () {
+    changerMusique();
+  });
+
+  // MARCHE / ARRÊT
 
   bouton.addEventListener("click", function () {
 
@@ -188,15 +198,19 @@
 
     audio.play().then(function () {
       afficher(true);
-    }).catch(function () {
+    }).catch(function (erreur) {
       afficher(false);
-      alert("Impossible de démarrer la musique. Vérifiez le lien MP3.");
+      alert("Impossible de lire cette musique. Vérifiez le fichier MP3.");
+      console.error(erreur);
     });
 
   });
 
+  // REGLAGE DU VOLUME
+
   volume.addEventListener("input", function () {
     audio.volume = Number(volume.value);
+
     valeurVolume.textContent =
       Math.round(audio.volume * 100) + " %";
   });
@@ -208,6 +222,12 @@
   audio.addEventListener("pause", function () {
     afficher(false);
   });
+
+  audio.addEventListener("ended", function () {
+    afficher(false);
+  });
+
+  // MUSIQUE PAR DEFAUT
 
   changerMusique();
 
