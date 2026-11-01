@@ -4,239 +4,109 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Musique du club - Pétanque Soullandaise</title>
-
-<style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: #f2f4f6;
-  font-family: Arial, sans-serif;
-  color: #222;
-}
-
-.lecteur {
-  width: 100%;
-  max-width: 430px;
-  padding: 26px 22px;
-  text-align: center;
-  background: white;
-  border: 2px solid #ccc;
-  border-radius: 18px;
-  box-shadow: 0 4px 16px #0002;
-}
-
-h1 { font-size: 23px; }
-
-.morceau {
-  color: #555;
-  font-size: 15px;
-  margin-bottom: 22px;
-}
-
-select {
-  width: 100%;
-  padding: 14px;
-  margin: 12px 0 18px;
-  border: 1px solid #aaa;
-  border-radius: 9px;
-  font-size: 16px;
-  background: white;
-}
-
-button {
-  width: 100%;
-  min-height: 62px;
-  border: 0;
-  border-radius: 13px;
-  background: #198754;
-  color: white;
-  font-size: 21px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button.arret { background: #dc3545; }
-
-.volume {
-  margin-top: 22px;
-  text-align: left;
-  font-size: 14px;
-}
-
-input[type=range] {
-  width: 100%;
-  margin-top: 12px;
-}
-
-.note {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #666;
-  margin-top: 20px;
-}
-
-.statut {
-  font-size: 13px;
-  margin-top: 12px;
-  color: #555;
-}
-</style>
+<title>Musique Pétanque Soullandaise</title>
 </head>
 
-<body>
+<body style="font-family:Arial;background:#f2f2f2;text-align:center;padding:20px;">
 
-<main class="lecteur">
+<div style="
+max-width:420px;
+margin:30px auto;
+background:white;
+padding:25px;
+border-radius:18px;
+box-shadow:0 3px 12px #0003;
+">
 
-<h1>🎵 MUSIQUE DU CLUB</h1>
+<h2>🎵 PÉTANQUE SOULLANDAISE</h2>
+<p>Lecteur musical du club</p>
 
-<p class="morceau" id="titre">
-Pétanque Soullandaise
-</p>
-
-<label for="choix"><b>Choisir une musique :</b></label>
-
-<select id="choix">
-  <option value="terrain">Sur le Terrain</option>
-  <option value="popdance">Pop Dance</option>
+<select id="choix" style="width:100%;padding:12px;font-size:16px;border-radius:8px;">
+<option value="03-Sur%20le%20Terrain.mp3">Sur le Terrain</option>
+<option value="popdance.mp3">Pop Dance</option>
 </select>
 
-<button id="bouton" type="button">
+<br><br>
+
+<audio id="audio" preload="auto" style="width:100%;">
+</audio>
+
+<button onclick="lecture()" style="
+background:#198754;color:white;border:0;
+padding:15px 25px;border-radius:10px;
+font-size:18px;font-weight:bold;">
 ▶ MARCHE
 </button>
 
-<div class="volume">
-  <label for="volume">
-    Volume : <span id="valeur-volume">25 %</span>
-  </label>
+<button onclick="arret()" style="
+background:#dc3545;color:white;border:0;
+padding:15px 25px;border-radius:10px;
+font-size:18px;font-weight:bold;">
+■ ARRÊT
+</button>
 
-  <input id="volume" type="range"
-    min="0" max="1" step="0.05" value="0.25">
+<br><br>
+
+<label>🔊 Volume</label><br>
+<input type="range" min="0" max="1" step="0.05"
+value="0.7" id="volume" style="width:100%;">
+
+<p id="statut">Musique arrêtée</p>
+
+<hr>
+
+<a href="https://petanquesoullandaise.fr"
+style="
+display:inline-block;
+background:#0d6efd;
+color:white;
+padding:14px 22px;
+border-radius:10px;
+text-decoration:none;
+font-size:17px;
+font-weight:bold;">
+↩ RETOUR À KALISPORT
+</a>
+
 </div>
 
-<p class="statut" id="statut">Musique arrêtée</p>
-
-<p class="note">
-Choisissez une musique puis appuyez sur MARCHE.
-Lecture en boucle.
-</p>
-
-<audio id="audio" preload="none"></audio>
-
-</main>
-
 <script>
-(function () {
+const base = "https://212035am.github.io/Musique-soullandaise/";
+const audio = document.getElementById("audio");
+const choix = document.getElementById("choix");
+const statut = document.getElementById("statut");
 
-  var audio = document.getElementById("audio");
-  var bouton = document.getElementById("bouton");
-  var choix = document.getElementById("choix");
-  var volume = document.getElementById("volume");
-  var valeurVolume = document.getElementById("valeur-volume");
-  var titre = document.getElementById("titre");
-  var statut = document.getElementById("statut");
+audio.src = base + choix.value;
+audio.volume = 0.7;
 
-  // LES DEUX MUSIQUES SUR GITHUB PAGES
+choix.addEventListener("change", function() {
+  audio.pause();
+  audio.currentTime = 0;
+  audio.src = base + choix.value;
+  statut.textContent = "Musique arrêtée";
+});
 
-  var musiques = {
+document.getElementById("volume").addEventListener("input", function() {
+  audio.volume = this.value;
+});
 
-    terrain: {
-      nom: "Sur le Terrain",
-      url: "https://212035Am.github.io/Musique-soullandaise/03-Sur%20le%20Terrain.mp3"
-    },
-
-    popdance: {
-      nom: "Pop Dance",
-      url: "https://212035Am.github.io/Musique-soullandaise/popdance.mp3"
-    }
-
-  };
-
-  var lectureEnCours = false;
-
-  audio.volume = Number(volume.value);
-  audio.loop = true;
-
-  function afficher(enLecture) {
-    lectureEnCours = enLecture;
-
-    bouton.textContent = enLecture
-      ? "⏹ ARRÊT"
-      : "▶ MARCHE";
-
-    bouton.classList.toggle("arret", enLecture);
-
-    statut.textContent = enLecture
-      ? "Musique en cours de lecture"
-      : "Musique arrêtée";
-  }
-
-  function changerMusique() {
-
-    audio.pause();
-    audio.currentTime = 0;
-
-    var musique = musiques[choix.value];
-
-    audio.src = musique.url;
-    audio.load();
-
-    titre.textContent =
-      "Pétanque Soullandaise — " + musique.nom;
-
-    afficher(false);
-  }
-
-  choix.addEventListener("change", changerMusique);
-
-  bouton.addEventListener("click", function () {
-
-    if (!audio.paused) {
-      audio.pause();
-      audio.currentTime = 0;
-      afficher(false);
-      return;
-    }
-
-    audio.play().then(function () {
-      afficher(true);
-    }).catch(function (erreur) {
-      afficher(false);
-      statut.textContent = "Erreur de lecture";
-      alert("Impossible de lire le MP3. Vérifiez le fichier sur GitHub.");
-      console.error(erreur);
-    });
-
+function lecture() {
+  audio.play().then(function() {
+    statut.textContent = "Musique en cours";
+  }).catch(function() {
+    statut.textContent = "Erreur de lecture du MP3";
   });
+}
 
-  volume.addEventListener("input", function () {
-    audio.volume = Number(volume.value);
+function arret() {
+  audio.pause();
+  audio.currentTime = 0;
+  statut.textContent = "Musique arrêtée";
+}
 
-    valeurVolume.textContent =
-      Math.round(audio.volume * 100) + " %";
-  });
-
-  audio.addEventListener("play", function () {
-    afficher(true);
-  });
-
-  audio.addEventListener("pause", function () {
-    afficher(false);
-  });
-
-  audio.addEventListener("error", function () {
-    afficher(false);
-    statut.textContent = "Fichier MP3 inaccessible";
-  });
-
-  changerMusique();
-
-})();
+audio.addEventListener("ended", function() {
+  statut.textContent = "Musique terminée";
+});
 </script>
 
 </body>
