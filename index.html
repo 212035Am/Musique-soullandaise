@@ -4,13 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Musique du club - Pétanque Soullandaise</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -34,10 +31,7 @@ body {
   box-shadow: 0 4px 16px #0002;
 }
 
-h1 {
-  font-size: 23px;
-  margin: 0 0 15px;
-}
+h1 { font-size: 23px; }
 
 .morceau {
   color: #555;
@@ -48,7 +42,7 @@ h1 {
 select {
   width: 100%;
   padding: 14px;
-  margin-bottom: 18px;
+  margin: 12px 0 18px;
   border: 1px solid #aaa;
   border-radius: 9px;
   font-size: 16px;
@@ -67,9 +61,7 @@ button {
   cursor: pointer;
 }
 
-button.arret {
-  background: #dc3545;
-}
+button.arret { background: #dc3545; }
 
 .volume {
   margin-top: 22px;
@@ -101,47 +93,40 @@ input[type=range] {
 
 <main class="lecteur">
 
-  <h1>🎵 MUSIQUE DU CLUB</h1>
+<h1>🎵 MUSIQUE DU CLUB</h1>
 
-  <p class="morceau" id="titre">
-    Pétanque Soullandaise
-  </p>
+<p class="morceau" id="titre">
+Pétanque Soullandaise
+</p>
 
-  <label for="choix"><b>Choisir une musique :</b></label>
+<label for="choix"><b>Choisir une musique :</b></label>
 
-  <select id="choix">
-    <option value="terrain">Sur le Terrain</option>
-    <option value="popdance">Pop Dance</option>
-  </select>
+<select id="choix">
+  <option value="terrain">Sur le Terrain</option>
+  <option value="popdance">Pop Dance</option>
+</select>
 
-  <button id="bouton" type="button">
-    ▶ MARCHE
-  </button>
+<button id="bouton" type="button">
+▶ MARCHE
+</button>
 
-  <div class="volume">
-    <label for="volume">
-      Volume : <span id="valeur-volume">25 %</span>
-    </label>
+<div class="volume">
+  <label for="volume">
+    Volume : <span id="valeur-volume">25 %</span>
+  </label>
 
-    <input
-      id="volume"
-      type="range"
-      min="0"
-      max="1"
-      step="0.05"
-      value="0.25">
-  </div>
+  <input id="volume" type="range"
+    min="0" max="1" step="0.05" value="0.25">
+</div>
 
-  <p class="statut" id="statut">
-    Musique arrêtée
-  </p>
+<p class="statut" id="statut">Musique arrêtée</p>
 
-  <p class="note">
-    Choisissez votre musique puis appuyez sur MARCHE.
-    Lecture en boucle.
-  </p>
+<p class="note">
+Choisissez une musique puis appuyez sur MARCHE.
+Lecture en boucle.
+</p>
 
-  <audio id="audio" preload="none"></audio>
+<audio id="audio" preload="none"></audio>
 
 </main>
 
@@ -156,18 +141,18 @@ input[type=range] {
   var titre = document.getElementById("titre");
   var statut = document.getElementById("statut");
 
-  // ADRESSES GITHUB PAGES
+  // LES DEUX MUSIQUES SUR GITHUB PAGES
 
   var musiques = {
 
     terrain: {
       nom: "Sur le Terrain",
-      url: "https://212035am.github.io/Musique-soullandaise/03%20-%20Sur%20le%20Terrain.mp3"
+      url: "https://212035Am.github.io/Musique-soullandaise/03-Sur%20le%20Terrain.mp3"
     },
 
     popdance: {
       nom: "Pop Dance",
-      url: "https://212035am.github.io/Musique-soullandaise/popdance.mp3"
+      url: "https://212035Am.github.io/Musique-soullandaise/popdance.mp3"
     }
 
   };
@@ -178,7 +163,6 @@ input[type=range] {
   audio.loop = true;
 
   function afficher(enLecture) {
-
     lectureEnCours = enLecture;
 
     bouton.textContent = enLecture
@@ -208,54 +192,33 @@ input[type=range] {
     afficher(false);
   }
 
-  // CHOIX DU MORCEAU
-
-  choix.addEventListener("change", function () {
-    changerMusique();
-  });
-
-  // MARCHE / ARRÊT
+  choix.addEventListener("change", changerMusique);
 
   bouton.addEventListener("click", function () {
 
-    if (lectureEnCours) {
-
+    if (!audio.paused) {
       audio.pause();
       audio.currentTime = 0;
       afficher(false);
-
       return;
     }
 
     audio.play().then(function () {
-
       afficher(true);
-
     }).catch(function (erreur) {
-
       afficher(false);
-
-      statut.textContent = "Erreur de lecture du MP3";
-
-      alert(
-        "Impossible de lire cette musique. Vérifiez que le fichier est publié sur GitHub Pages."
-      );
-
+      statut.textContent = "Erreur de lecture";
+      alert("Impossible de lire le MP3. Vérifiez le fichier sur GitHub.");
       console.error(erreur);
-
     });
 
   });
 
-  // VOLUME
-
   volume.addEventListener("input", function () {
-
     audio.volume = Number(volume.value);
 
     valeurVolume.textContent =
       Math.round(audio.volume * 100) + " %";
-
   });
 
   audio.addEventListener("play", function () {
@@ -270,8 +233,6 @@ input[type=range] {
     afficher(false);
     statut.textContent = "Fichier MP3 inaccessible";
   });
-
-  // MUSIQUE DE DEPART
 
   changerMusique();
 
