@@ -5,93 +5,135 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Musique Pétanque Soullandaise</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  text-align: center;
+  padding: 20px;
+}
+
+.lecteur {
+  max-width: 420px;
+  margin: 30px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 3px 12px #0003;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin: 5px;
+  font-size: 17px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+
+#marche { background: #198754; }
+#arret { background: #dc3545; }
+#retour { background: #0d6efd; width: 100%; }
+
+select {
+  width: 100%;
+  padding: 12px;
+  font-size: 17px;
+  border-radius: 8px;
+}
+
+input[type=range] {
+  width: 100%;
+}
+</style>
 </head>
 
-<body style="font-family:Arial;background:#f2f2f2;text-align:center;padding:20px;">
+<body>
 
-<div style="
-max-width:420px;
-margin:30px auto;
-background:white;
-padding:25px;
-border-radius:18px;
-box-shadow:0 3px 12px #0003;
-">
+<div class="lecteur">
 
-<h2>🎵 PÉTANQUE SOULLANDAISE</h2>
-<p>Lecteur musical du club</p>
+<h2>🎵 MUSIQUE DU CLUB</h2>
+<p>Pétanque Soullandaise</p>
 
-<select id="choix" style="width:100%;padding:12px;font-size:16px;border-radius:8px;">
-<option value="03-Sur%20le%20Terrain.mp3">Sur le Terrain</option>
-<option value="popdance.mp3">Pop Dance</option>
+<label>Choisir une musique :</label>
+<br><br>
+
+<select id="choix">
+  <option value="03-Sur%20le%20Terrain.mp3">
+    Sur le Terrain
+  </option>
+  <option value="popdance.mp3">
+    Pop Dance
+  </option>
 </select>
 
 <br><br>
 
-<audio id="audio" preload="auto" style="width:100%;">
-</audio>
+<audio id="audio" preload="auto"></audio>
 
-<button onclick="lecture()" style="
-background:#198754;color:white;border:0;
-padding:15px 25px;border-radius:10px;
-font-size:18px;font-weight:bold;">
+<button id="marche" onclick="lecture()">
 ▶ MARCHE
 </button>
 
-<button onclick="arret()" style="
-background:#dc3545;color:white;border:0;
-padding:15px 25px;border-radius:10px;
-font-size:18px;font-weight:bold;">
+<button id="arret" onclick="arretMusique()">
 ■ ARRÊT
 </button>
 
 <br><br>
 
-<label>🔊 Volume</label><br>
-<input type="range" min="0" max="1" step="0.05"
-value="0.7" id="volume" style="width:100%;">
+<label>🔊 Volume</label>
+<input type="range" id="volume"
+min="0" max="1" step="0.05" value="0.7">
 
 <p id="statut">Musique arrêtée</p>
 
 <hr>
 
-<br><br>
+<br>
 
-<a href="https://petanquesoullandaise.fr"
-target="_blank"
-style="
-display:inline-block;
-background:#0d6efd;
-color:white;
-padding:14px 22px;
-border-radius:10px;
-text-decoration:none;
-font-size:17px;
-font-weight:bold;">
+<button id="retour" onclick="retourKalisport()">
 ↩ RETOUR À KALISPORT
-</a>
+</button>
+
 </div>
 
 <script>
-const base = "https://212035am.github.io/Musique-soullandaise/";
+
+const base =
+"https://212035am.github.io/Musique-soullandaise/";
+
 const audio = document.getElementById("audio");
 const choix = document.getElementById("choix");
 const statut = document.getElementById("statut");
+const volume = document.getElementById("volume");
 
-audio.src = base + choix.value;
-audio.volume = 0.7;
+// Chargement de la musique
+function chargerMusique() {
+  audio.src = base + choix.value;
+  audio.load();
+}
 
+chargerMusique();
+
+// Changement de musique
 choix.addEventListener("change", function() {
   audio.pause();
   audio.currentTime = 0;
-  audio.src = base + choix.value;
+  chargerMusique();
   statut.textContent = "Musique arrêtée";
 });
 
-document.getElementById("volume").addEventListener("input", function() {
+// Réglage du volume
+volume.addEventListener("input", function() {
   audio.volume = this.value;
 });
 
+audio.volume = 0.7;
+
+// Lecture
 function lecture() {
   audio.play().then(function() {
     statut.textContent = "Musique en cours";
@@ -100,15 +142,30 @@ function lecture() {
   });
 }
 
-function arret() {
+// Arrêt
+function arretMusique() {
   audio.pause();
   audio.currentTime = 0;
   statut.textContent = "Musique arrêtée";
 }
 
+// Fin de musique
 audio.addEventListener("ended", function() {
   statut.textContent = "Musique terminée";
 });
+
+// Retour vers Kalisport sans fermer le lecteur
+function retourKalisport() {
+  if (window.opener && !window.opener.closed) {
+    window.opener.focus();
+    statut.textContent =
+      "Musique maintenue - retour demandé à Kalisport";
+  } else {
+    statut.textContent =
+      "Utilisez les onglets Chrome pour revenir à Kalisport.";
+  }
+}
+
 </script>
 
 </body>
