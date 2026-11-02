@@ -157,7 +157,9 @@ audio.addEventListener("ended", function() {
 // Retour vers Kalisport sans fermer le lecteur
 function retourKalisport() {
   if (window.opener && !window.opener.closed) {
-    window.opener.focus();
+// window.opener.focus();
+    window.open("https://petanquesoullandaise.fr", "Kalisport").focus();
+    
     statut.textContent =
       "Musique maintenue - retour demandé à Kalisport";
   } else {
